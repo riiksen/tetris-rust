@@ -1,31 +1,46 @@
 //! Game logic
 extern crate rand;
 
-use opengl_graphics::{ GlGraphics, OpenGL };
+use rand::{
+    distributions::{ Distribution, Standard },
+    Rng,
+};
 
-use rand::prelude::*;
-
-pub struct App {
+pub struct Game {
     board: [[u8; 20]; 10],
-    next_tetriminos: [Tetrimino; 5],
-    holding: u8,
+    next_tetriminos: Vec<Tetrimino>,
+    holding: Option<Tetrimino>,
 }
 
-impl App {
-    pub fn new() -> App {
-        App {
-            board: [[0; 20]; 10],
-            next_tetriminos: [Tetrimino::I; 5],
-            holding: 0,
+impl Game {
+    pub fn new() -> Game {
+        Game {
+            board: [[0u8; 20]; 10],
+            next_tetriminos: Game::gen_start_tetriminos(),
+            holding: None,
         }
     }
 
-    pub fn update(&mut self) {
+    fn gen_start_tetriminos() -> Vec<Tetrimino> {
+        let mut nt: Vec<Tetrimino> = Vec::new();
 
+        for _ in 0..5 {
+            nt.push(rand::random::<Tetrimino>());
+        }
+
+        nt
     }
 
-    pub fn gen_new_tetrimino(&mut self) {
-        let _x: u8 = random();
+    pub fn hard_drop(&mut self) -> bool {
+        true
+    }
+
+    pub fn move_left(&mut self) -> bool {
+        true
+    }
+
+    pub fn move_right(&mut self) -> bool {
+        true
     }
 }
 
@@ -38,4 +53,18 @@ pub enum Tetrimino {
     Z,
     J,
     L,
+}
+
+impl Distribution<Tetrimino> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Tetrimino {
+        match rng.gen_range(0, 7) {
+            0 => Tetrimino::I,
+            1 => Tetrimino::O,
+            2 => Tetrimino::T,
+            3 => Tetrimino::S,
+            4 => Tetrimino::Z,
+            5 => Tetrimino::J,
+            _ => Tetrimino::L,
+        }
+    }
 }
