@@ -26,9 +26,9 @@ use glfw_window::GlfwWindow as AppWindow;
 #[cfg(feature = "include_glutin")]
 use glutin_window::GlutinWindow as AppWindow;
 
-pub use board::*;
+pub use game::*;
 
-mod board;
+mod game;
 
 type AxisValues = HashMap<(i32, u8), f64>;
 
@@ -47,6 +47,8 @@ fn main() {
 
     let mut touch_visualizer = TouchVisualizer::new();
     let mut axis_values: AxisValues = HashMap::new();
+
+    let mut app = App::new();
 
     let mut events = Events::new(EventSettings::new().lazy(true));
     while let Some(e) = events.next(&mut window) {
