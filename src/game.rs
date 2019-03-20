@@ -9,7 +9,9 @@ use rand::{
 pub struct Game {
     board: [[u8; 20]; 10],
     next_tetriminos: Vec<Tetrimino>,
+    current_tetrimino: Tetrimino,
     holding: Option<Tetrimino>,
+    selected_column: u8,
 }
 
 impl Game {
@@ -17,7 +19,9 @@ impl Game {
         Game {
             board: [[0u8; 20]; 10],
             next_tetriminos: Game::gen_start_tetriminos(),
+            current_tetrimino: rand::random::<Tetrimino>(),
             holding: None,
+            selected_column: 5,
         }
     }
 
@@ -29,6 +33,10 @@ impl Game {
         }
 
         nt
+    }
+
+    pub fn soft_drop(&mut self) -> bool {
+        true
     }
 
     pub fn hard_drop(&mut self) -> bool {

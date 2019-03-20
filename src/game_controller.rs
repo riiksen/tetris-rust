@@ -7,15 +7,12 @@ use crate::game::Game;
 pub struct GameController {
     /// Stores the game state
     pub game: Game,
-
-    pub current_column: u8,
 }
 
 impl GameController {
     pub fn new(game: Game) -> GameController {
         GameController {
             game: game,
-            current_column: 5,
         }
     }
 
@@ -25,17 +22,13 @@ impl GameController {
         if let Some(Button::Keyboard(key)) = e.press_args() {
             match key {
                 Key::A | Key::Left => {
-                    if self.game.move_left() {
-                        self.current_column -= 1;
-                    }
+                    self.game.move_left();
                 },
                 Key::S | Key::Down => {
-
+                    self.game.soft_drop();
                 },
                 Key::D | Key::Right => {
-                    if self.game.move_right() {
-                        self.current_column += 1;
-                    }
+                    self.game.move_right();
                 },
                 Key::Space => {
                     self.game.hard_drop();
