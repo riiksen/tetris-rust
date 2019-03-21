@@ -7,7 +7,7 @@ use rand::{
 };
 
 pub struct Game {
-    pub board: [[u8; 20]; 10],
+    pub board: [[Option<Tetrimino>; 20]; 10],
     pub next_tetriminos: Vec<Tetrimino>,
     pub current_tetrimino: Tetrimino,
     pub holding: Option<Tetrimino>,
@@ -17,7 +17,7 @@ pub struct Game {
 impl Game {
     pub fn new() -> Game {
         Game {
-            board: [[0u8; 20]; 10],
+            board: [[None; 20]; 10],
             next_tetriminos: Game::gen_start_tetriminos(),
             current_tetrimino: rand::random::<Tetrimino>(),
             holding: None,
@@ -64,7 +64,7 @@ pub enum Tetrimino {
 }
 
 impl Tetrimino {
-    pub fn color_of_id(_id: &u8) -> [f32; 4] {
+    pub fn color(&self) -> [f32; 4] {
         [0.6, 0.6, 0.6, 1.0]
     }
 }

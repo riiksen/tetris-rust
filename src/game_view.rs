@@ -15,8 +15,8 @@ pub struct GameViewSettings {
     pub border_color: Color,
     /// Cell border color
     pub cb_color: Color,
-    /// Cell border radious
-    pub cb_radious: f64,
+    /// Cell border radius
+    pub cb_radius: f64,
 }
 
 impl GameViewSettings {
@@ -27,7 +27,7 @@ impl GameViewSettings {
             background_color: [0.4, 0.4, 0.4, 1.0],
             border_color: [0.0, 0.0, 0.0, 1.0],
             cb_color: [0.2, 0.2, 0.2, 1.0],
-            cb_radious: 1.0,
+            cb_radius: 1.0,
         }
     }
 }
@@ -51,8 +51,8 @@ impl GameView {
     ) {
         self.draw_board(controller, c, g);
         self.draw_state(controller, c, g);
-        self.draw_next_and_holding(controller, c, g);
-        self.draw_current_and_shadow(controller, c, g);
+        self.draw_current_next_and_holding(controller, c, g);
+        self.draw_shadow(controller, c, g);
     }
 
     fn draw_board<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
@@ -75,7 +75,7 @@ impl GameView {
             .draw(board_rect, &c.draw_state, c.transform, g);
 
         // Draw cell borders
-        let cell_border = Line::new(self.settings.cb_color, self.settings.cb_radious);
+        let cell_border = Line::new(self.settings.cb_color, self.settings.cb_radius);
 
         // Draw horizontal lines
         for i in 0..20 {
@@ -106,7 +106,7 @@ impl GameView {
 
         for (i, row) in board.iter().enumerate() {
             for (j, col) in row.iter().enumerate() {
-                if *col == 0u8 { continue; }
+                if let None = col { continue; }
 
                 let x = self.settings.position[0] + i as f64 / 10.0 * self.settings.size[0];
                 let y = self.settings.position[1] + j as f64 / 20.0 * self.settings.size[1];
@@ -115,17 +115,83 @@ impl GameView {
 
                 let rect = [x, y, x2, y2];
 
-                Rectangle::new(Tetrimino::color_of_id(&col))
+                Rectangle::new(col.unwrap().color())
                     .draw(rect, &c.draw_state, c.transform, g);
             }
         }
     }
 
-    fn draw_next_and_holding<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
+    fn draw_current_next_and_holding<G: Graphics>(&self, controller: &GameController, c: &Context, g: &mut G) {
+        // Draw holding
+        let ref holding = controller.game.holding;
 
+        let holding_border = [
+            self.settings.position[0] - 80.0, self.settings.position[1] - 10.0,
+            40.0 + 20.0, 40.0 + 20.0,
+        ];
+
+        Rectangle::new(self.settings.border_color)
+            .draw(holding_border, &c.draw_state, c.transform, g);
+
+        let holding_background = [
+            self.settings.position[0] - 70.0, self.settings.position[1],
+            40.0, 40.0,
+        ];
+
+        Rectangle::new(self.settings.background_color)
+            .draw(holding_background, &c.draw_state, c.transform, g);
+
+
+        // Draw current tetrimino border and background
+        let current_border = [
+            self.settings.position[0] + self.settings.size[0] + 20.0, self.settings.position[1] - 10.0,
+            50.0 + 20.0, 50.0 + 20.0,
+        ];
+
+        Rectangle::new(self.settings.border_color)
+            .draw(current_border, &c.draw_state, c.transform, g);
+
+        let current_background = [
+            self.settings.position[0] + self.settings.size[0] + 30.0, self.settings.position[1],
+            50.0, 50.0,
+        ];
+
+        Rectangle::new(self.settings.background_color)
+            .draw(current_background, &c.draw_state, c.transform, g);
+
+        // Draw next tetrimino border and background
+        let next_border = [
+            self.settings.position[0] + self.settings.size[0] + 20.0, self.settings.position[1] - 10.0 + 80.0,
+            50.0 + 20.0, 50.0 * 5.0 + 10.0 + 5.0,
+        ];
+
+        Rectangle::new(self.settings.border_color)
+            .draw(next_border, &c.draw_state, c.transform, g);
+
+        let next_background = [
+            self.settings.position[0] + self.settings.size[0] + 30.0, self.settings.position[1] + 80.0,
+            50.0, 50.0 * 5.0 - 10.0 + 5.0,
+        ];
+
+        Rectangle::new(self.settings.background_color)
+            .draw(next_background, &c.draw_state, c.transform, g);
+
+        // Draw next tetrimino separators
+        let x = self.settings.position[0] + self.settings.size[0] + 30.0;
+        let x2 = x + 50.0;
+
+        let cell_border = Line::new(self.settings.cb_color, self.settings.cb_radius);
+
+        for i in 0..5 {
+            let y = self.settings.position[1] + 80.0 + i as f64 * 50.0;
+            let y2 = self.settings.position[1] + 80.0 + i as f64 * 50.0;
+
+            let line = [x, y, x2, y2];
+            cell_border.draw(line, &c.draw_state, c.transform, g);
+        }
     }
 
-    fn draw_current_and_shadow<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
+    fn draw_shadow<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
 
     }
 }
