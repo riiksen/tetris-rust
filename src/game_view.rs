@@ -2,8 +2,7 @@
 
 use graphics::types::Color;
 use graphics::{ Context, Graphics };
-
-use graphics::{ Image, Line, Rectangle, Transformed };
+use graphics::{ Line, Rectangle };
 
 use crate::game_controller::GameController;
 use crate::game::Tetrimino;
@@ -50,9 +49,9 @@ impl GameView {
         g: &mut G
     ) {
         self.draw_board(controller, c, g);
-        self.draw_state(controller, c, g);
         self.draw_current_next_and_holding(controller, c, g);
-        self.draw_shadow(controller, c, g);
+        self.draw_state(controller, c, g);
+        // self.draw_current_shadow(controller, c, g);
     }
 
     fn draw_board<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
@@ -101,30 +100,8 @@ impl GameView {
 
     }
 
-    fn draw_state<G: Graphics>(&self, controller: &GameController, c: &Context, g: &mut G) {
-        let ref board = controller.game.board;
-
-        for (i, row) in board.iter().enumerate() {
-            for (j, col) in row.iter().enumerate() {
-                if let None = col { continue; }
-
-                let x = self.settings.position[0] + i as f64 / 10.0 * self.settings.size[0];
-                let y = self.settings.position[1] + j as f64 / 20.0 * self.settings.size[1];
-                let x2 = x + self.settings.size[0];
-                let y2 = y + self.settings.size[1];
-
-                let rect = [x, y, x2, y2];
-
-                Rectangle::new(col.unwrap().color())
-                    .draw(rect, &c.draw_state, c.transform, g);
-            }
-        }
-    }
-
-    fn draw_current_next_and_holding<G: Graphics>(&self, controller: &GameController, c: &Context, g: &mut G) {
+    fn draw_current_next_and_holding<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
         // Draw holding
-        let ref holding = controller.game.holding;
-
         let holding_border = [
             self.settings.position[0] - 80.0, self.settings.position[1] - 10.0,
             40.0 + 20.0, 40.0 + 20.0,
@@ -191,8 +168,65 @@ impl GameView {
         }
     }
 
-    fn draw_shadow<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
+    fn draw_state<G: Graphics>(&self, controller: &GameController, c: &Context, g: &mut G) {
+        let ref board = controller.game.board;
 
+        // Draw grid state
+        for (i, row) in board.iter().enumerate() {
+            for (j, col) in row.iter().enumerate() {
+                if let None = col { continue; }
+
+                let x = self.settings.position[0] + i as f64 / 10.0 * self.settings.size[0];
+                let y = self.settings.position[1] + j as f64 / 20.0 * self.settings.size[1];
+                let x2 = x + self.settings.size[0];
+                let y2 = y + self.settings.size[1];
+
+                let rect = [x, y, x2, y2];
+
+                Rectangle::new(col.unwrap().color())
+                    .draw(rect, &c.draw_state, c.transform, g);
+            }
+        }
+
+        // Draw current and next tetriminos state
+        let x = self.settings.position[0] + self.settings.size[0] + 30.0;
+        let y = self.settings.position[1];
+        let size = 50.0;
+
+        self.draw_tetrimino(controller.game.current_tetrimino, (x, y, size), c, g);
+
+        let x = self.settings.position[0] + self.settings.size[0] + 30.0;
+        let size = 50.0;
+        for i in 0..5 {
+            let y = self.settings.position[1] + 80.0 + i as f64 * 50.0;
+
+            self.draw_tetrimino(controller.game.next_tetriminos[i], (x, y, size), c, g);
+        }
+
+        // holding state
+        if let Some(holding) = controller.game.holding {
+            let x = self.settings.position[0] - 70.0;
+            let y = self.settings.position[1];
+            let size = 40.0;
+
+            self.draw_tetrimino(holding, (x, y, size), c, g);
+        }
+    }
+
+    // fn draw_current_and_shadow<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
+
+    // }
+    
+    fn draw_tetrimino<G: Graphics>(&self, t: Tetrimino, pos: (f64, f64, f64), c: &Context, g: &mut G) {
+        match t {
+            Tetrimino::I => {},
+            Tetrimino::L => {},
+            Tetrimino::J => {},
+            Tetrimino::S => {},
+            Tetrimino::Z => {},
+            Tetrimino::O => {},
+            Tetrimino::T => {},
+        }
     }
 }
 

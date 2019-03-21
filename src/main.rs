@@ -10,11 +10,15 @@ extern crate glfw_window;
 #[cfg(feature = "include_glutin")]
 extern crate glutin_window;
 
+#[allow(unused_imports)]
 use touch_visualizer::TouchVisualizer;
 use opengl_graphics::{ GlGraphics, OpenGL };
+#[allow(unused_imports)]
 use graphics::{ Context, Graphics };
+#[allow(unused_imports)]
 use std::collections::HashMap;
 
+#[allow(unused_imports)]
 use piston::window::{ AdvancedWindow, Window, WindowSettings };
 use piston::input::*;
 use piston::event_loop::*;
