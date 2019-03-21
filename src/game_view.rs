@@ -6,6 +6,7 @@ use graphics::{ Context, Graphics };
 use graphics::{ Image, Line, Rectangle, Transformed };
 
 use crate::game_controller::GameController;
+use crate::game::Tetrimino;
 
 pub struct GameViewSettings {
     pub position: [f64; 2],
@@ -54,7 +55,7 @@ impl GameView {
         self.draw_current_and_shadow(controller, c, g);
     }
 
-    fn draw_board<G: Graphics>(&self, controller: &GameController, c: &Context, g: &mut G) {
+    fn draw_board<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
         // Draw board borders
         let board_border = [
             self.settings.position[0] - 10.0, self.settings.position[1] - 10.0,
@@ -76,27 +77,55 @@ impl GameView {
         // Draw cell borders
         let cell_border = Line::new(self.settings.cb_color, self.settings.cb_radious);
 
-        // Draw vertical lines
-        for i in 0..10 {
+        // Draw horizontal lines
+        for i in 0..20 {
+            let x = self.settings.position[0];
+            let y = self.settings.position[1] + i as f64 / 20.0 * self.settings.size[1];
+            let x2 = self.settings.position[0] + self.settings.size[0];
+            let y2 = self.settings.position[1] + i as f64 / 20.0 * self.settings.size[1];
 
+            let line = [x, y, x2, y2];
+            cell_border.draw(line, &c.draw_state, c.transform, g);
         }
 
-        // Draw horizontal lines
-        for j in 0..20 {
+        // Draw vertical lines
+        for i in 0..10 {
+            let x = self.settings.position[0] + i as f64 / 10.0 * self.settings.size[0];
+            let y = self.settings.position[1];
+            let x2 = self.settings.position[0] + i as f64 / 10.0 * self.settings.size[0];
+            let y2 = self.settings.position[1] + self.settings.size[1];
 
+            let line = [x, y, x2, y2];
+            cell_border.draw(line, &c.draw_state, c.transform, g);
         }
 
     }
 
     fn draw_state<G: Graphics>(&self, controller: &GameController, c: &Context, g: &mut G) {
+        let ref board = controller.game.board;
+
+        for (i, row) in board.iter().enumerate() {
+            for (j, col) in row.iter().enumerate() {
+                if *col == 0u8 { continue; }
+
+                let x = self.settings.position[0] + i as f64 / 10.0 * self.settings.size[0];
+                let y = self.settings.position[1] + j as f64 / 20.0 * self.settings.size[1];
+                let x2 = x + self.settings.size[0];
+                let y2 = y + self.settings.size[1];
+
+                let rect = [x, y, x2, y2];
+
+                Rectangle::new(Tetrimino::color_of_id(&col))
+                    .draw(rect, &c.draw_state, c.transform, g);
+            }
+        }
+    }
+
+    fn draw_next_and_holding<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
 
     }
 
-    fn draw_next_and_holding<G: Graphics>(&self, controller: &GameController, c: &Context, g: &mut G) {
-
-    }
-
-    fn draw_current_and_shadow<G: Graphics>(&self, controller: &GameController, c: &Context, g: &mut G) {
+    fn draw_current_and_shadow<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {
 
     }
 }
