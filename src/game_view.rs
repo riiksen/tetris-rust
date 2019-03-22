@@ -2,7 +2,11 @@
 
 use graphics::types::Color;
 use graphics::{ Context, Graphics };
-use graphics::{ Line, Rectangle };
+use graphics::{ Image, Line, Rectangle };
+
+use piston_window::{ Texture, TextureSettings, Flip, GfxFactory };
+
+use std::path::Path;
 
 use crate::game_controller::GameController;
 use crate::game::Tetrimino;
@@ -33,12 +37,14 @@ impl GameViewSettings {
 
 pub struct GameView {
     settings: GameViewSettings,
+    factory: GfxFactory,
 }
 
 impl GameView {
-    pub fn new(settings: GameViewSettings) -> GameView {
+    pub fn new(settings: GameViewSettings, f: GfxFactory) -> GameView {
         GameView {
             settings: settings,
+            factory: f,
         }
     }
 
@@ -217,80 +223,27 @@ impl GameView {
     // }
     
     fn draw_tetrimino<G: Graphics>(&self, t: Tetrimino, pos: (f64, f64, f64), c: &Context, g: &mut G) {
+        let image = Image::new().rect(graphics::rectangle::square(pos.0, pos.1, pos.2));
+        let mut path: &Path;
+
         match t {
-            Tetrimino::I => {},
-            Tetrimino::L => {},
-            Tetrimino::J => {},
-            Tetrimino::S => {},
-            Tetrimino::Z => {},
-            Tetrimino::O => {},
-            Tetrimino::T => {},
+            Tetrimino::I => path = Path::new("./assets/i.png"),
+            Tetrimino::L => path = Path::new("./assets/l.png"),
+            Tetrimino::J => path = Path::new("./assets/j.png"),
+            Tetrimino::S => path = Path::new("./assets/s.png"),
+            Tetrimino::Z => path = Path::new("./assets/z.png"),
+            Tetrimino::O => path = Path::new("./assets/o.png"),
+            Tetrimino::T => path = Path::new("./assets/t.png"),
         }
+
+        // let texture: G2dTexture = Texture::from_path(path, &TextureSettings::new()).unwrap();
+        let texture = Texture::from_path(
+            &mut self.factory,
+            path,
+            Flip::None,
+            &TextureSettings::new()
+        ).unwrap();
+
+        image.draw(&texture, &c.draw_state, c.transform, g);
     }
 }
-
-// fn draw_rectangles<G: Graphics>(
-//     cursor: [f64; 2],
-//     window: &Window,
-//     c: &Context,
-//     g: &mut G,
-// ) {
-//     let size = window.size();
-//     let draw_size = window.draw_size();
-//     let zoom = 0.2;
-//     let offset = 30.0;
-
-//     let rect_border = graphics::Rectangle::new_border([1.0, 0.0, 0.0, 1.0], 1.0);
-
-//     // Cursor.
-//     let cursor_color = [0.0, 0.0, 0.0, 1.0];
-//     let zoomed_cursor = [offset + cursor[0] * zoom, offset + cursor[1] * zoom];
-//     graphics::ellipse(
-//         cursor_color,
-//         graphics::ellipse::circle(zoomed_cursor[0], zoomed_cursor[1], 4.0),
-//         c.transform,
-//         g
-//     );
-
-//     // User coordinates.
-//     rect_border.draw([
-//             offset,
-//             offset,
-//             size.width as f64 * zoom,
-//             size.height as f64 * zoom
-//         ],
-//         &c.draw_state, c.transform, g);
-//     let rect_border = graphics::Rectangle::new_border([0.0, 0.0, 1.0, 1.0], 1.0);
-//     rect_border.draw(
-//         [
-//             offset + size.width as f64 * zoom,
-//             offset,
-//             draw_size.width as f64 * zoom,
-//             draw_size.height as f64 * zoom
-//         ],
-//         &c.draw_state, c.transform, g);
-// }
-
-// fn draw_axis_values<W: Window, G: Graphics>(
-//     axis_values: &mut AxisValues,
-//     window: &W,
-//     c: &Context,
-//     g: &mut G,
-// ) {
-//     let window_height = window.size().height as f64;
-//     let max_axis_height = 200.0;
-//     let offset = 10.0;
-//     let top = window_height - (max_axis_height + offset);
-//     let color = [1.0, 0.0, 0.0, 1.0];
-//     let width = 10.0;
-//     let mut draw = |i, v: f64| {
-//         let i = i as f64;
-//         let height = (v + 1.0) / 2.0 * max_axis_height;
-//         let rect = [offset + i * (width + offset),
-//             top + max_axis_height - height, width, height];
-//         graphics::rectangle(color, rect, c.transform, g);
-//     };
-//     for (i, &v) in axis_values.values().enumerate() {
-//         draw(i, v);
-//     }
-// }
