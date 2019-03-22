@@ -97,7 +97,6 @@ impl GameView {
             let line = [x, y, x2, y2];
             cell_border.draw(line, &c.draw_state, c.transform, g);
         }
-
     }
 
     fn draw_current_next_and_holding<G: Graphics>(&self, _controller: &GameController, c: &Context, g: &mut G) {

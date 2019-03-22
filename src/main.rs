@@ -3,10 +3,10 @@ extern crate opengl_graphics;
 extern crate graphics;
 extern crate touch_visualizer;
 
-#[cfg(feature = "include_sdl2")]
-extern crate sdl2_window;
-#[cfg(feature = "include_glfw")]
-extern crate glfw_window;
+// #[cfg(feature = "include_sdl2")]
+// extern crate sdl2_window;
+// #[cfg(feature = "include_glfw")]
+// extern crate glfw_window;
 #[cfg(feature = "include_glutin")]
 extern crate glutin_window;
 
@@ -23,10 +23,10 @@ use piston::window::{ AdvancedWindow, Window, WindowSettings };
 use piston::input::*;
 use piston::event_loop::*;
 
-#[cfg(feature = "include_sdl2")]
-use sdl2_window::Sdl2Window as AppWindow;
-#[cfg(feature = "include_glfw")]
-use glfw_window::GlfwWindow as AppWindow;
+// #[cfg(feature = "include_sdl2")]
+// use sdl2_window::Sdl2Window as AppWindow;
+// #[cfg(feature = "include_glfw")]
+// use glfw_window::GlfwWindow as AppWindow;
 #[cfg(feature = "include_glutin")]
 use glutin_window::GlutinWindow as AppWindow;
 
