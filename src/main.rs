@@ -3,33 +3,8 @@ extern crate ggez;
 use ggez::{ event, graphics };
 use ggez::{ Context, GameResult };
 
-// mod game;
-// mod game_controller;
-// mod game_view;
-
-// pub use game::Game;
-// pub use game_controller::GameController;
-// pub use game_view::{ GameView, GameViewSettings };
-
-struct Game {
-
-}
-
-impl Game {
-    pub fn new() -> Self {
-        Game {}
-    }
-}
-
-impl event::EventHandler for Game {
-    fn update(&mut self, ctx: &mut Context) -> GameResult {
-        Ok(())
-    }
-
-    fn draw(&mut self, ctx: &mut Context) -> GameResult {
-        Ok(())
-    }
-}
+mod game;
+pub use game::Game;
 
 fn main() {
     let cb = ggez::ContextBuilder::new("tetriz", "555555");
