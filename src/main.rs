@@ -1,6 +1,7 @@
 extern crate ggez;
 
 use ggez::event;
+use ggez::event::{ KeyCode, KeyMods };
 use ggez::graphics;
 use ggez::{ Context, GameResult };
 
@@ -15,7 +16,7 @@ struct MainState {
 
 impl MainState {
     fn new() -> Self {
-        MainState {
+        Self {
             current_game: None,
         }
     }
@@ -30,10 +31,28 @@ impl event::EventHandler for MainState {
         graphics::clear(ctx, [1.0; 4].into());
 
         if let Some(cg) = &mut self.current_game {
-            cg.render(ctx);
+            cg.render(ctx)?;
         }
 
+        graphics::present(ctx)?;
+
         Ok(())
+    }
+
+    fn key_down_event(
+        &mut self,
+        ctx: &mut Context,
+        keycode: KeyCode,
+        keymod: KeyMods,
+        repeat: bool,
+    ) {
+        if let Some(cg) = &mut self.current_game {
+            cg.key_down_event(ctx, keycode, keymod, repeat);
+        } else {
+            if let KeyCode::K = keycode {
+               self.current_game = Some(Box::new(game::Marathon::new()));
+            }
+        }
     }
 }
 
