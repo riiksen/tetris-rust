@@ -1,4 +1,3 @@
-use ggez::event;
 use ggez::{ Context, GameResult };
 
 use super::tetrimino;
@@ -13,26 +12,36 @@ fn gen_start_tetriminos() -> [tetrimino::Type; 5] {
     nt
 }
 
-pub struct Game {
+pub trait Game {
+    fn render(&mut self, ctx: &mut Context) -> GameResult;
+    fn update(&mut self, ctx: &mut Context) -> GameResult;
+    fn start(&mut self) -> GameResult;
+}
+
+pub struct Marathon {
     pub matrix: [[Option<tetrimino::Type>; 20]; 10],
     pub next_tetriminos: [tetrimino::Type; 5],
 }
 
-impl Game {
-    pub fn new() -> Self {
-        Game {
+impl Marathon {
+    fn new() -> Self {
+        Marathon {
             matrix: [[None; 20]; 10],
             next_tetriminos: gen_start_tetriminos(),
         }
     }
 }
 
-impl event::EventHandler for Game {
+impl Game for Marathon {
+    fn start(&mut self) -> GameResult {
+        Ok(())
+    }
+
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
         Ok(())
     }
 
-    fn draw(&mut self, _ctx: &mut Context) -> GameResult {
+    fn render(&mut self, _ctx: &mut Context) -> GameResult {
         Ok(())
     }
 }

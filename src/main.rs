@@ -10,12 +10,14 @@ pub mod tetrimino;
 use game::Game;
 
 struct MainState {
-
+    current_game: Option<Box<Game>>,
 }
 
 impl MainState {
     fn new() -> Self {
-        MainState {}
+        MainState {
+            current_game: None,
+        }
     }
 }
 
@@ -24,7 +26,13 @@ impl event::EventHandler for MainState {
         Ok(())
     }
 
-    fn draw(&mut self, _ctx: &mut Context) -> GameResult {
+    fn draw(&mut self, ctx: &mut Context) -> GameResult {
+        graphics::clear(ctx, [1.0; 4].into());
+
+        if let Some(cg) = &mut self.current_game {
+            cg.render(ctx);
+        }
+
         Ok(())
     }
 }
