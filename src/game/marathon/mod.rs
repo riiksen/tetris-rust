@@ -4,6 +4,8 @@ use ggez::event::{ KeyCode, KeyMods };
 use super::Game;
 use super::super::tetrimino;
 
+mod render;
+
 fn gen_start_tetriminos() -> [tetrimino::Type; 5] {
     let mut nt = [tetrimino::Type::I; 5];
 
