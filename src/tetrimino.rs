@@ -1,6 +1,8 @@
 use rand::distributions::{ Distribution, Standard };
 use rand::Rng;
 
+use ggez::graphics::Color;
+
 #[derive(Copy, Clone)]
 pub enum Type {
     I,
@@ -18,8 +20,8 @@ pub fn random() -> Type {
 }
 
 impl Type {
-    pub fn color(&self) -> [f32; 4] {
-        [0.6, 0.6, 0.6, 1.0]
+    pub fn color(&self) -> Color {
+        [0.6, 0.6, 0.6, 1.0].into()
     }
 }
 

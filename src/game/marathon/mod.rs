@@ -17,6 +17,8 @@ fn gen_start_tetriminos() -> [tetrimino::Type; 5] {
 }
 
 pub struct Marathon {
+    pub view_settings: render::ViewSettings,
+
     pub matrix: [[Option<tetrimino::Type>; 20]; 10],
     pub next_tetriminos: [tetrimino::Type; 5],
     pub holding: Option<tetrimino::Type>,
@@ -29,6 +31,8 @@ pub struct Marathon {
 impl Marathon {
     pub fn new() -> Self {
         Self {
+            view_settings: render::ViewSettings::new(),
+
             matrix: [[None; 20]; 10],
             next_tetriminos: gen_start_tetriminos(),
             holding: None,
@@ -61,6 +65,21 @@ impl Marathon {
     fn hard_drop(&mut self) {
 
     }
+
+    // TODO: Implement
+    fn hold(&mut self) {
+
+    }
+
+    // TODO: Implement
+    fn rotate_left(&mut self) {
+
+    }
+
+    // TODO: Implement
+    fn rotate_right(&mut self) {
+
+    }
 }
 
 impl Game for Marathon {
@@ -77,10 +96,10 @@ impl Game for Marathon {
     }
 
     fn render(&mut self, ctx: &mut Context) -> GameResult {
-        render::render_board(ctx);
-        render::render_current_next_and_holding(ctx);
-        render::render_state(ctx);
-        render::render_current_and_shadow(ctx);
+        render::render_board(ctx, &self.view_settings);
+        render::render_current_next_and_holding(ctx, &self.view_settings);
+        render::render_state(ctx, &self.view_settings, &self);
+        render::render_current_and_shadow(ctx, &self.view_settings);
 
         Ok(())
     }
@@ -103,16 +122,16 @@ impl Game for Marathon {
                 self.move_right();
             },
             KeyCode::W | KeyCode::Up | KeyCode::X => {
-
+                self.rotate_right();
             },
             KeyCode::Z | KeyCode::LControl => {
-
+                self.rotate_left();
             },
             KeyCode::Space => {
                 self.hard_drop();
             },
             KeyCode::LShift | KeyCode::C => {
-
+                self.hold();
             },
             KeyCode::Escape => {
                 self.end();
