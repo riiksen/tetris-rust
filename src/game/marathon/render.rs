@@ -42,7 +42,7 @@ pub fn render_board(ctx: &mut Context, view_settings: &ViewSettings) {
         ctx,
         &mesh,
         graphics::DrawParam::default()
-    );
+    ).unwrap();
 
     // Draw matrix background
     let board_rect = graphics::Rect::new(
@@ -56,7 +56,7 @@ pub fn render_board(ctx: &mut Context, view_settings: &ViewSettings) {
         ctx,
         &mesh,
         graphics::DrawParam::default()
-    );
+    ).unwrap();
 
     // Draw cell borders
 
@@ -80,8 +80,8 @@ pub fn render_board(ctx: &mut Context, view_settings: &ViewSettings) {
             ctx,
             &mesh,
             graphics::DrawParam::default()
-        );
-       }
+        ).unwrap()
+    }
 
     // Draw vertical lines
     for i in 0..10 {
@@ -102,16 +102,118 @@ pub fn render_board(ctx: &mut Context, view_settings: &ViewSettings) {
             ctx,
             &mesh,
             graphics::DrawParam::default()
-        );
+        ).unwrap();
     }
 }
 
-// TODO: Implement
-pub fn render_current_next_and_holding(_ctx: &mut Context, view_settings: &ViewSettings) {
+pub fn render_current_next_and_holding(ctx: &mut Context, view_settings: &ViewSettings) {
+    // Draw holding
+    let holding_border = graphics::Rect::new(
+        view_settings.position[0] - 80.0, view_settings.position[1] - 10.0,
+        40.0 + 20.0, 40.0 + 20.0,
+    );
 
+    let mesh = graphics::Mesh::new_rectangle(ctx, graphics::DrawMode::fill(), holding_border, view_settings.border_color).unwrap();
+
+    graphics::draw(
+        ctx,
+        &mesh,
+        graphics::DrawParam::default()
+    ).unwrap();
+
+    let holding_background = graphics::Rect::new(
+        view_settings.position[0] - 70.0, view_settings.position[1],
+        40.0, 40.0,
+    );
+
+    let mesh = graphics::Mesh::new_rectangle(ctx, graphics::DrawMode::fill(), holding_background, view_settings.background_color).unwrap();
+
+    graphics::draw(
+        ctx,
+        &mesh,
+        graphics::DrawParam::default()
+    ).unwrap();
+
+
+    // Draw current tetrimino border and background
+    let current_border = graphics::Rect::new(
+        view_settings.position[0] + view_settings.size[0] + 20.0, view_settings.position[1] - 10.0,
+        50.0 + 20.0, 50.0 + 20.0,
+    );
+
+    let mesh = graphics::Mesh::new_rectangle(ctx, graphics::DrawMode::fill(), current_border, view_settings.border_color).unwrap();
+
+    graphics::draw(
+        ctx,
+        &mesh,
+        graphics::DrawParam::default()
+    ).unwrap();
+
+    let current_background = graphics::Rect::new(
+        view_settings.position[0] + view_settings.size[0] + 30.0, view_settings.position[1],
+        50.0, 50.0,
+    );
+
+    let mesh = graphics::Mesh::new_rectangle(ctx, graphics::DrawMode::fill(), current_background, view_settings.background_color).unwrap();
+
+    graphics::draw(
+        ctx,
+        &mesh,
+        graphics::DrawParam::default()
+    ).unwrap();
+
+    // Draw next tetrimino border and background
+    let next_border = graphics::Rect::new(
+        view_settings.position[0] + view_settings.size[0] + 20.0, view_settings.position[1] - 10.0 + 80.0,
+        50.0 + 20.0, 50.0 * 5.0 + 10.0 + 5.0,
+    );
+
+    let mesh = graphics::Mesh::new_rectangle(ctx, graphics::DrawMode::fill(), next_border, view_settings.border_color).unwrap();
+
+    graphics::draw(
+        ctx,
+        &mesh,
+        graphics::DrawParam::default()
+    ).unwrap();
+
+    let next_background = graphics::Rect::new(
+        view_settings.position[0] + view_settings.size[0] + 30.0, view_settings.position[1] + 80.0,
+        50.0, 50.0 * 5.0 - 10.0 + 5.0,
+    );
+
+    let mesh = graphics::Mesh::new_rectangle(ctx, graphics::DrawMode::fill(), next_background, view_settings.background_color).unwrap();
+
+    graphics::draw(
+        ctx,
+        &mesh,
+        graphics::DrawParam::default()
+    ).unwrap();
+
+    // Draw next tetrimino separators
+    let x = view_settings.position[0] + view_settings.size[0] + 30.0;
+    let x2 = x + 50.0;
+
+    for i in 0..5 {
+        let y = view_settings.position[1] + 80.0 + i as f32 * 50.0;
+        let y2 = view_settings.position[1] + 80.0 + i as f32 * 50.0;
+
+        // let line = [x, y, x2, y2];
+
+        let line = [
+            ggez::mint::Point2 { x: x, y: y },
+            ggez::mint::Point2 { x: x2, y: y2 },
+        ];
+
+        let mesh = graphics::Mesh::new_line(ctx, &line, view_settings.cb_radius, view_settings.cb_color).unwrap();
+
+        graphics::draw(
+            ctx,
+            &mesh,
+            graphics::DrawParam::default()
+        ).unwrap()
+    }
 }
 
-// TODO: Implement
 pub fn render_state(ctx: &mut Context, view_settings: &ViewSettings, game: &super::Marathon) {
     // Draw grid state
     for (i, row) in game.matrix.iter().enumerate() {
@@ -130,7 +232,7 @@ pub fn render_state(ctx: &mut Context, view_settings: &ViewSettings, game: &supe
                 ctx,
                 &mesh,
                 graphics::DrawParam::default()
-            );
+            ).unwrap();
         }
     }
 
@@ -160,11 +262,11 @@ pub fn render_state(ctx: &mut Context, view_settings: &ViewSettings, game: &supe
 }
 
 // TODO: Implement
-pub fn render_current_and_shadow(_ctx: &mut Context, view_settings: &ViewSettings) {
+pub fn render_current_and_shadow(_ctx: &mut Context, _view_settings: &ViewSettings) {
 
 }
 
 // TODO: Implement
-fn render_tetrimino(_ctx: &mut Context, view_settings: &ViewSettings, pos: (f32, f32, f32), t: tetrimino::Type) {
+fn render_tetrimino(_ctx: &mut Context, _view_settings: &ViewSettings, _pos: (f32, f32, f32), _t: tetrimino::Type) {
 
 }
