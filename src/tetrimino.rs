@@ -12,6 +12,11 @@ pub enum Type {
     L,
 }
 
+// TODO: Implement
+pub fn random() -> Type {
+    Type::I
+}
+
 impl Type {
     pub fn color(&self) -> [f32; 4] {
         [0.6, 0.6, 0.6, 1.0]

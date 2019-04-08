@@ -15,5 +15,6 @@ pub trait Game {
         keycode: KeyCode,
         keymod: KeyMods,
         repeat: bool);
+    fn is_finished(&mut self) -> bool;
 }
 

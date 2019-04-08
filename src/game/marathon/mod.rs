@@ -19,6 +19,11 @@ fn gen_start_tetriminos() -> [tetrimino::Type; 5] {
 pub struct Marathon {
     pub matrix: [[Option<tetrimino::Type>; 20]; 10],
     pub next_tetriminos: [tetrimino::Type; 5],
+    pub holding: Option<tetrimino::Type>,
+    pub current_tetrimino: tetrimino::Type,
+    pub current_column: u8,
+
+    pub finished: bool,
 }
 
 impl Marathon {
@@ -26,7 +31,35 @@ impl Marathon {
         Self {
             matrix: [[None; 20]; 10],
             next_tetriminos: gen_start_tetriminos(),
+            holding: None,
+            current_tetrimino: tetrimino::random(),
+            current_column: 5,
+            finished: false,
         }
+    }
+
+    fn end(&mut self) {
+        self.finished = true;
+    }
+
+    // TODO: Implement
+    fn move_left(&mut self) {
+
+    }
+
+    // TODO: Implement
+    fn move_right(&mut self) {
+
+    }
+
+    // TODO: Implement
+    fn move_down(&mut self) {
+
+    }
+
+    // TODO: Implement
+    fn hard_drop(&mut self) {
+
     }
 }
 
@@ -39,7 +72,16 @@ impl Game for Marathon {
         Ok(())
     }
 
-    fn render(&mut self, _ctx: &mut Context) -> GameResult {
+    fn is_finished(&mut self) -> bool {
+        self.finished
+    }
+
+    fn render(&mut self, ctx: &mut Context) -> GameResult {
+        render::render_board(ctx);
+        render::render_current_next_and_holding(ctx);
+        render::render_state(ctx);
+        render::render_current_and_shadow(ctx);
+
         Ok(())
     }
 
@@ -52,13 +94,13 @@ impl Game for Marathon {
     ) {
         match keycode {
             KeyCode::A | KeyCode::Left => {
-
+                self.move_left();
             },
             KeyCode::S | KeyCode::Down => {
-
+                self.move_down();
             },
             KeyCode::D | KeyCode::Right => {
-
+                self.move_right();
             },
             KeyCode::W | KeyCode::Up | KeyCode::X => {
 
@@ -67,10 +109,13 @@ impl Game for Marathon {
 
             },
             KeyCode::Space => {
-
+                self.hard_drop();
             },
             KeyCode::LShift | KeyCode::C => {
 
+            },
+            KeyCode::Escape => {
+                self.end();
             },
             _ => {},
         }

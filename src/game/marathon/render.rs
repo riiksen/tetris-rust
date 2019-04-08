@@ -1,22 +1,27 @@
-use ggez::graphics;
+// use ggez::graphics;
 use ggez::{ Context };
 
-pub fn render_board(ctx: &mut Context) {
+// TODO: Implement
+pub fn render_board(_ctx: &mut Context) {
 
 }
 
-pub fn render_current_next_and_holding(ctx: &mut Context) {
+// TODO: Implement
+pub fn render_current_next_and_holding(_ctx: &mut Context) {
 
 }
 
-pub fn render_state(ctx: &mut Context) {
+// TODO: Implement
+pub fn render_state(_ctx: &mut Context) {
 
 }
 
-pub fn render_current_and_shadow(ctx: &mut Context) {
-
+// TODO: Implement
+pub fn render_current_and_shadow(_ctx: &mut Context) {
+    render_tetrimino(_ctx);
 }
 
-pub fn render_tetrimino(ctx: &mut Context) {
+// TODO: Implement
+fn render_tetrimino(_ctx: &mut Context) {
 
 }

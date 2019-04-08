@@ -24,6 +24,10 @@ impl MainState {
 
 impl event::EventHandler for MainState {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
+        if let Some(cg) = &mut self.current_game {
+            if cg.is_finished() { self.current_game = None; }
+        }
+
         Ok(())
     }
 
@@ -49,7 +53,7 @@ impl event::EventHandler for MainState {
         if let Some(cg) = &mut self.current_game {
             cg.key_down_event(ctx, keycode, keymod, repeat);
         } else {
-            if let KeyCode::K = keycode {
+            if let KeyCode::Key1 = keycode {
                self.current_game = Some(Box::new(game::Marathon::new()));
             }
         }
