@@ -84,8 +84,15 @@ fn main() {
 
     println!("{:?}", resource_dir);
 
+    // let win_mode = ggez::conf::WindowMode::default();
+    // win_mode.resizable(true);
+
     let cb = ggez::ContextBuilder::new("tetriz", "555555").add_resource_path(resource_dir);
     let (ctx, event_loop) = &mut cb.build().unwrap();
+
+    // graphics::set_mode(ctx, win_mode).unwrap();
+    // graphics::set_resizable(ctx, true);
+
     let mut state = MainState::new();
     event::run(ctx, event_loop, &mut state).unwrap();
 }

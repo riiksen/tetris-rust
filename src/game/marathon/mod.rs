@@ -8,11 +8,11 @@ mod view;
 
 use view::MarathonView;
 
-fn gen_start_tetriminos() -> [tetrimino::Type; 5] {
-    let mut nt = [tetrimino::Type::I; 5];
+fn gen_start_tetriminos() -> Vec<tetrimino::Type> {
+    let mut nt = Vec::new();
 
-    for i in 0..5 {
-        nt[i] = rand::random::<tetrimino::Type>();
+    for _ in 0..5 {
+        nt.push(rand::random::<tetrimino::Type>());
     }
 
     nt
@@ -22,7 +22,7 @@ pub struct Marathon {
     view: MarathonView,
 
     pub matrix: [[Option<tetrimino::Type>; 20]; 10],
-    pub next_tetriminos: [tetrimino::Type; 5],
+    pub next_tetriminos: Vec<tetrimino::Type>,
     pub holding: Option<tetrimino::Type>,
     pub current_tetrimino: tetrimino::Type,
     pub current_column: u8,
@@ -72,7 +72,11 @@ impl Marathon {
 
     fn hold(&mut self) {
         if let None = self.holding {
+            self.holding = Some(self.current_tetrimino);
 
+            self.current_tetrimino = self.next_tetriminos[0];
+            self.next_tetriminos.remove(0);
+            self.next_tetriminos.push(rand::random::<tetrimino::Type>());
         } else {
             let switch_tmp = self.current_tetrimino;
             self.current_tetrimino = self.holding.unwrap();
@@ -109,7 +113,7 @@ impl Game for Marathon {
         self.view.render_board(ctx);
         self.view.render_current_next_and_holding(ctx);
 
-        self.view.render_state(ctx, (self.matrix, self.current_tetrimino, self.next_tetriminos, self.holding));
+        self.view.render_state(ctx, (self.matrix, self.current_tetrimino, &self.next_tetriminos, self.holding));
         self.view.render_current_and_shadow(ctx, (self.current_tetrimino, self.current_column));
 
         Ok(())

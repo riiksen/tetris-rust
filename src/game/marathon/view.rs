@@ -3,32 +3,6 @@ use ggez::{ Context };
 
 use crate::tetrimino;
 
-pub struct ViewSettings {
-    pub position: [f32; 2],
-    pub size: [f32; 2],
-    pub background_color: Color,
-    pub border_color: Color,
-    
-    // Cell border color
-    pub cb_color: Color,
-
-    // Cell border radius
-    pub cb_radius: f32,
-}
-
-impl ViewSettings {
-    pub fn new() -> Self {
-        Self {
-            position: [85., 40.],
-            size: [300., 500.],
-            background_color: [0.4, 0.4, 0.4, 1.0].into(),
-            border_color: [0.0, 0.0, 0.0, 1.0].into(),
-            cb_color: [0.2, 0.2, 0.2, 1.0].into(),
-            cb_radius: 1.0,
-        }
-    }
-}
-
 pub struct MarathonView {
     pub position: [f32; 2],
     pub size: [f32; 2],
@@ -259,7 +233,7 @@ impl MarathonView {
         &mut self,
         ctx: &mut Context,
         // (matrix, current_tetrimino, next_tetrimino, holding)
-        game: ([[Option<tetrimino::Type>; 20]; 10], tetrimino::Type, [tetrimino::Type; 5], Option<tetrimino::Type>))
+        game: ([[Option<tetrimino::Type>; 20]; 10], tetrimino::Type, &Vec<tetrimino::Type>, Option<tetrimino::Type>))
     {
         // Draw grid state
         for (i, row) in game.0.iter().enumerate() {
@@ -308,7 +282,7 @@ impl MarathonView {
     }
 
     // TODO: Implement
-    pub fn render_current_and_shadow(&mut self, _ctx: &mut Context, game: (tetrimino::Type, u8)) {
+    pub fn render_current_and_shadow(&mut self, _ctx: &mut Context, _game: (tetrimino::Type, u8)) {
 
     }
 
@@ -330,7 +304,7 @@ impl MarathonView {
         graphics::draw(
             ctx,
             image,
-            graphics::DrawParam::default().dest(position)
+            graphics::DrawParam::default().dest(position).scale(ggez::mint::Vector2 { x: 0.20, y: 0.20 })
         ).unwrap();
     }
 }
