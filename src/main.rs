@@ -5,8 +5,6 @@ use ggez::event::{ KeyCode, KeyMods };
 use ggez::graphics;
 use ggez::{ Context, GameResult };
 
-use std::time::Instant;
-
 mod game;
 pub mod tetrimino;
 
@@ -14,14 +12,12 @@ use game::Game;
 
 struct MainState {
     current_game: Option<Box<Game>>,
-    last_update_time: Instant,
 }
 
 impl MainState {
     fn new() -> Self {
         Self {
             current_game: None,
-            last_update_time: Instant::now(),
         }
     }
 }
@@ -51,8 +47,6 @@ impl event::EventHandler for MainState {
             &text,
             (ggez::mint::Point2 { x: 400.0, y: 0.0 }, graphics::BLACK)
         ).unwrap();
-
-        self.last_update_time = Instant::now();
 
         graphics::present(ctx)?;
 
