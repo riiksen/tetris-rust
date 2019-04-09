@@ -4,7 +4,9 @@ use ggez::event::{ KeyCode, KeyMods };
 use super::Game;
 use super::super::tetrimino;
 
-mod render;
+mod view;
+
+use view::MarathonView;
 
 fn gen_start_tetriminos() -> [tetrimino::Type; 5] {
     let mut nt = [tetrimino::Type::I; 5];
@@ -17,7 +19,7 @@ fn gen_start_tetriminos() -> [tetrimino::Type; 5] {
 }
 
 pub struct Marathon {
-    pub view_settings: render::ViewSettings,
+    view: MarathonView,
 
     pub matrix: [[Option<tetrimino::Type>; 20]; 10],
     pub next_tetriminos: [tetrimino::Type; 5],
@@ -29,9 +31,9 @@ pub struct Marathon {
 }
 
 impl Marathon {
-    pub fn new() -> Self {
+    pub fn new(ctx: &mut Context) -> Self {
         Self {
-            view_settings: render::ViewSettings::new(),
+            view: MarathonView::new(ctx),
 
             matrix: [[None; 20]; 10],
             next_tetriminos: gen_start_tetriminos(),
@@ -46,14 +48,16 @@ impl Marathon {
         self.finished = true;
     }
 
-    // TODO: Implement
     fn move_left(&mut self) {
-
+        if self.current_column > 0 {
+            self.current_column -= 1;
+        }
     }
 
-    // TODO: Implement
     fn move_right(&mut self) {
-
+        if self.current_column < 10 {
+            self.current_column += 1;
+        }
     }
 
     // TODO: Implement
@@ -66,9 +70,15 @@ impl Marathon {
 
     }
 
-    // TODO: Implement
     fn hold(&mut self) {
+        if let None = self.holding {
 
+        } else {
+            let switch_tmp = self.current_tetrimino;
+            self.current_tetrimino = self.holding.unwrap();
+            self.holding = Some(switch_tmp);
+
+        }
     }
 
     // TODO: Implement
@@ -96,10 +106,11 @@ impl Game for Marathon {
     }
 
     fn render(&mut self, ctx: &mut Context) -> GameResult {
-        render::render_board(ctx, &self.view_settings);
-        render::render_current_next_and_holding(ctx, &self.view_settings);
-        render::render_state(ctx, &self.view_settings, &self);
-        render::render_current_and_shadow(ctx, &self.view_settings);
+        self.view.render_board(ctx);
+        self.view.render_current_next_and_holding(ctx);
+
+        self.view.render_state(ctx, (self.matrix, self.current_tetrimino, self.next_tetriminos, self.holding));
+        self.view.render_current_and_shadow(ctx, (self.current_tetrimino, self.current_column));
 
         Ok(())
     }
