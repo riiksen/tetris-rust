@@ -62,12 +62,14 @@ impl Marathon {
 
     // TODO: Implement
     fn move_down(&mut self) {
-
+        self.matrix[2][3] = Some(tetrimino::Type::I);
     }
 
     // TODO: Implement
     fn hard_drop(&mut self) {
-
+        self.current_tetrimino = self.next_tetriminos[0];
+        self.next_tetriminos.remove(0);
+        self.next_tetriminos.push(rand::random::<tetrimino::Type>());
     }
 
     fn hold(&mut self) {

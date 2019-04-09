@@ -240,10 +240,26 @@ impl MarathonView {
             for (j, col) in row.iter().enumerate() {
                 if let None = col { continue; }
 
+                println!("{}, {}", i, j);
+
                 let x = self.position[0] + i as f32 / 10.0 * self.size[0];
                 let y = self.position[1] + j as f32 / 20.0 * self.size[1];
-                let x2 = x + self.size[0];
-                let y2 = y + self.size[1];
+
+                let x2 = self.position[0] + (i + 1) as f32 / 10.0 * self.size[0];
+                let y2 = self.position[1] + (j + 1) as f32 / 20.0 * self.size[1];
+
+                println!("{}, {}, {}, {}", x, y, x2, y2);
+
+                // let x = self.position[0] + i as f32 / 10.0 * self.size[0];
+                // let y = self.position[1];
+                // let x2 = self.position[0] + i as f32 / 10.0 * self.size[0];
+                // let y2 = self.position[1] + self.size[1];
+
+
+                // let x = self.position[0];
+                // let y = self.position[1] + i as f32 / 20.0 * self.size[1];
+                // let x2 = self.position[0] + self.size[0];
+                // let y2 = self.position[1] + i as f32 / 20.0 * self.size[1];
 
                 let rect = graphics::Rect::new(x, y, x2, y2);
                 let mesh = graphics::Mesh::new_rectangle(ctx, graphics::DrawMode::fill(), rect, col.unwrap().color()).unwrap();

@@ -21,7 +21,15 @@ pub fn random() -> Type {
 
 impl Type {
     pub fn color(&self) -> Color {
-        [0.6, 0.6, 0.6, 1.0].into()
+        match self {
+            Type::I => [0.2, 0.2, 0.1, 1.0].into(),
+            Type::O => [0.0, 0.1, 0.1, 1.0].into(),
+            Type::T => [0.1, 0.0, 0.1, 1.0].into(),
+            Type::S => [0.1, 0.0, 0.0, 1.0].into(),
+            Type::Z => [0.0, 0.1, 0.0, 1.0].into(),
+            Type::J => [0.0, 0.0, 0.1, 1.0].into(),
+            Type::L => [0.1, 0.4, 0.0, 1.0].into(),
+        }
     }
 }
 
